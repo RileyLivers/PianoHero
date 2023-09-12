@@ -1,15 +1,16 @@
+#Created by Riley Livers
+
 import pygame
 import random
 import os
 import mido
 from pygame.locals import *
-#Created by Riley Livers
 
 #=================================================== ===================================================
 #
 #
 #                                          Functions Section
-#                                            Lines 13 : 96
+#                                        
 #
 #=================================================== ===================================================
 
@@ -173,20 +174,19 @@ window_width, window_height = 1440, 900
 window = pygame.display.set_mode((window_width, window_height), RESIZABLE)
 pygame.display.set_caption("Piano Hero")
 
+#store note positions for optimization, so the Note_Positions function is not always called
 notePos = []
 
 for x in range(21,108):
     temp = Note_Positions(x)
     notePos.append(temp)
-
-print(notePos[0])
 #----------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 #--------------------------- Initial Prrogram Setup For User ----------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 
-print("You have two song options because this is what I have after \nabout two days of coding... :) ")
+print("You have two song options so far:")
 print("Enter 1 for a suprise that I played myself :) \nEnter 2 for the song I used to test the program's ability for generic Midi")
 
 SongChoice = input("Enter your choice (1 or 2): ")
@@ -204,24 +204,25 @@ elif SongChoice == "2":
     mid = mido.MidiFile('85263.mid')
     midi_filename = '85263.mid'
     Delay = 0.90
-    print("Enjoy Pirates of the Carrabean")
+    print("Enjoy Pirates of the Carrabean.")
 
-elif SongChoice == "3":
-    # Code to execute when user enters 2
-    mid = mido.MidiFile('interstellar.mid')
-    midi_filename = 'interstellar.mid'
-    Delay = 0
-    print("Time")
+#Prototype for when I play interstellar
+# elif SongChoice == "3":
+#     # Code to execute when user enters 2
+#     mid = mido.MidiFile('interstellar.mid')
+#     midi_filename = 'interstellar.mid'
+#     Delay = 0
+#     print("Time")
 
 else:
     # Code to execute for invalid input
     print("Invalid input. Please enter either 1 or 2.")
-    SongChoice = input("Enter your choice (1 or 2 or 3): ")
+    SongChoice = input("Enter your choice (1 or 2): ")
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------            Main Loop          ---------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 # mixer config
@@ -247,9 +248,6 @@ time=0
 
 
 # Extract data from the MIDI file
-for msg in mid:
-	if msg.is_meta and msg.type == 'set_tempo':
-			tempo = msg.tempo
 
 
 for msg in mid:
