@@ -17,6 +17,8 @@ from UI.PlaySong import PlaySong
 from UI.TempMenu import TempMenu
 from UI.PortSelect import PortSelect
 from UI.PlayGround import PlayGround
+from UI.LearnPianoMenu import LearnPianoMenu
+from UI.LearnScreen import LearnScreen
 
 
 #=================================================== ===================================================
@@ -76,6 +78,15 @@ while running:
     elif current_screen == 'CreateSong':
         print('Song Creation Menu Active')
         window_width, window_height, current_screen = PlayGround(window, window_width, window_height, Midi_Input)
+
+    elif current_screen == 'LearnPianoMenu':
+        print('Learn Piano Menu Active')
+        window_width, window_height, current_screen = LearnPianoMenu(window, window_width, window_height)
+
+    elif current_screen == 'LearnChords':
+        print('Displayed LearnChords')
+        window_width, window_height, current_screen = LearnScreen(window, window_width, window_height)
+
 
 
 

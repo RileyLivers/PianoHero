@@ -116,8 +116,9 @@ def PlaySong(window, window_width, window_height, Chosen_Song):
             elif event.type == pygame.VIDEORESIZE:
                 #Update window width and height when the window is resized
                 window_width, window_height = event.dict['size']
-
                 BackButton.updateSize(window_width - (window_width / 10) - (window_width / 40), (window_height / 20) * 1, (window_width / 10), (window_height / 25))
+                for note in notes:
+                    note.windowUpdate(notePos, window_width, window_height)
 
         elapsed_time = clock.tick(tick_rate)  # Elapsed time in milliseconds
         elapsed_seconds = elapsed_time / 100000 * tick_rate  # Convert to seconds
@@ -131,7 +132,7 @@ def PlaySong(window, window_width, window_height, Chosen_Song):
         for infoNote in purenotes:
             #print(infoNote.time)
             if(seconds >= infoNote.time):
-                new_note = DisNote(infoNote.note, infoNote.duration, infoNote.time, notePos)
+                new_note = DisNote(window_width, window_height, infoNote.note, infoNote.duration, infoNote.time, notePos)
                 notes.append(new_note)
                 purenotes.remove(infoNote)
 
@@ -185,21 +186,21 @@ def PlaySong(window, window_width, window_height, Chosen_Song):
 
 
         #pygame.draw.rect(window, WHITE, (0, window_height - 200, window_width, 200))
-        DisplayWhites(notePos, NextFrame, window_height)
-        DisplayBlacks(notePos, NextFrame, window_height)
+        DisplayWhites(notePos, NextFrame, window_width, window_height)
+        DisplayBlacks(notePos, NextFrame, window_width, window_height)
 
         #Update falling notes position
         for note in notes:
             note.update()
 
             #Remove notes that have fallen off the screen
-            if note.y + note.height > window_height - 200:
+            if note.y + note.height > window_height - (window_height / 4.5):
                 if PlayFlag == 0:
                     play_music(midi_filename)
                     PlayFlag = 1
                 #delete the note as it falls into the piano so it doesnt overlap
                 note.height -= note.speed
-                LightKey(NextFrame, note.note, notePos, window_height)
+                LightKey(NextFrame, note.note, notePos, window_width, window_height)
 
             if note.height <= 0 :
                 notes.remove(note)

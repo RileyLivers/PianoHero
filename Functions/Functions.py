@@ -77,7 +77,7 @@ def is_black_key(key_number):
 def Note_Positions(key_number, window_width):
 
     if is_black_key(key_number):
-        position = ((Note_Positions(key_number - 1, window_width) + Note_Positions(key_number + 1, window_width)) / 2) + 7.5
+        position = ((Note_Positions(key_number - 1, window_width) + Note_Positions(key_number + 1, window_width)) / 2) + (window_width / 192)
 
     else:
         x = 20
@@ -86,35 +86,35 @@ def Note_Positions(key_number, window_width):
             x += 1
             if not (is_black_key(x)):
                 count += 1
-        position = (((window_width) / 52) * (count)) - 25
+        position = (((window_width) / 52) * (count)) - (window_width / 57.6)
     return position
 
 
 #this function is used to display all of the black keys on the botton of the program that are stagnant and used only to represent
 #the piano. 
-def DisplayBlacks(notePos, window, window_height):
+def DisplayBlacks(notePos, window, window_width, window_height):
 
     for disKey in range(21,109):
         black = is_black_key(disKey)
         if black:
             x = notePos[disKey-21]
             color = BLACK
-            keyW = 15
-            keyH = 120 
-            y = (window_height - keyH) - 80
+            keyW = window_width / 96
+            keyH = window_height / 7.5                    #Distance up from white key
+            y = (window_height - (window_height / 7.5)) - window_height / 11.25
             pygame.draw.rect(window, color, (x, y, keyW, keyH))
 
 #this function displays all of the white keys at the bottom of the screen, which represents the piano at the buttom. It is always
 #called before the white keys so that the black keys are placed on top of the whites. 
-def DisplayWhites(notePos, window, window_height):
+def DisplayWhites(notePos, window, window_width, window_height):
     
     for disKey in range(21,109):
         white = not is_black_key(disKey)
         if white:
             x = notePos[disKey-21]
             color = WHITE
-            keyW = 25
-            keyH = 200
+            keyW = window_width / 57.6
+            keyH = window_height / 4.5
             y = (window_height - keyH)
             pygame.draw.rect(window, color, (x, y, keyW, keyH))
 
@@ -123,35 +123,58 @@ def DisplayWhites(notePos, window, window_height):
 
 #This function "lights the key" that is passed through. What it does is draw a red key over the existing key, to make it appear as 
 #though it has been lit up. 
-def LightKey(window, key, notePos, window_height):
+def LightKey(window, key, notePos, window_width, window_height):
 
     black = is_black_key(key)
     if black:
         x = notePos[key-21]
         color = RED
-        keyW = 15
-        keyH = 120 
-        y = (window_height - keyH) - 80
+        keyW = window_width / 96
+        keyH = window_height / 7.5  
+        y = (window_height - keyH) - window_height / 11.25
         pygame.draw.rect(window, color, (x, y, keyW, keyH))
     else:
         x = notePos[key-21]
         color = RED
-        keyW = 25
-        keyH = 200
+        keyW = window_width / 57.6
+        keyH = window_height / 4.5
         y = (window_height - keyH)
         pygame.draw.rect(window, color, (x, y, keyW, keyH))
-        LayerKey(window, key, notePos, window_height)
-        LayerKey(window, key, notePos, window_height)
+        LayerKey(window, key, notePos, window_width, window_height)
+        LayerKey(window, key, notePos, window_width, window_height)
+
+def Light_Name_Key(window, window_width, key, notePos, window_height, note):
+    note_name = note[:-1]
+    black = is_black_key(key)
+    if black:
+        x = notePos[key-21]
+        color = RED
+        keyW = window_width / 96
+        keyH = window_height / 7.5  
+        y = (window_height - keyH) - window_height / 11.25
+        pygame.draw.rect(window, color, (x, y, keyW, keyH))
+        CreateText(window, window_width, x + (window_width / 192), (y - (window_height / 30)), note_name, RED, font, 5)
+    else:
+        x = notePos[key-21]
+        color = RED
+        keyW = window_width / 57.6
+        keyH = window_height / 4.5
+        y = (window_height - keyH)
+        pygame.draw.rect(window, color, (x, y, keyW, keyH))
+        LayerKey(window, key, notePos, window_width, window_height)
+        LayerKey(window, key, notePos, window_width, window_height)
+        CreateText(window, window_width, x + (window_width / 115.2), (y - (window_height / 30)), note_name, RED, font, 5)
+
 
 
 #the layer key function is used to redisplay black keys to the right and left of a white key that has been pressed (if there is a black key).
 #since the lightkey is called after the piano is displayed, the red key will overlap the black keys, so this must be called to redisplay the 
 #key that has been covered unintentionally. 
-def LayerKey(window, key, notePos, window_height):
+def LayerKey(window, key, notePos, window_width, window_height):
     color = BLACK
-    keyW = 15
-    keyH = 120
-    y = (window_height - keyH) - 80
+    keyW = window_width / 96
+    keyH = window_height / 7.5  
+    y = (window_height - keyH) - window_height / 11.25
 
     #used as flags to represent the existence of a black key to the right or left of the white key passed
     left = False
@@ -169,6 +192,42 @@ def LayerKey(window, key, notePos, window_height):
     if right:
         x = notePos[key-20]
         pygame.draw.rect(window, color, (x, y, keyW, keyH))
+
+
+
+#Function used to convert the note name to the midi number, using the note to midi dictionary for the note's number, 
+#and then scaling the by the octave
+def note_to_midi_number(note):
+
+#parses the name and octave from the input and splits into separate variables
+#Converts the octave to into to use within mathematical calculation for scaling
+    note_name = note[:-1]
+    octave = int(note[-1])
+
+    midi_number = 12 * (octave + 1) + note_to_midi[note_name]
+
+    return midi_number
+
+
+def DisChordButtons(window_width, window_height, names, buttons):
+    from Classes.Classes import Button
+
+    x = 1
+    y = 3
+    Right = 0
+    for name in names:
+        name = name.replace('_', ' ')
+        Right += 1
+        TempName = Button((window_width / 12) * x, (window_height / 20) * y, window_width / 8, window_height / 20, name, WHITE, GRAY, font, 30, BLACK)
+        buttons.append(TempName)
+        x += 2
+        if Right == 4:
+            Right = 0
+            x = 1
+            y += 4
+    Done = True
+
+    return buttons, Done, names
 
 
 

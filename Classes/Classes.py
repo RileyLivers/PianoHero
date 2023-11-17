@@ -21,22 +21,21 @@ from Resources.Parameters import *
 #A class that holds the parameters for notes that are going to be displayed on the screen.
 class DisNote:
 
-    def __init__(self, note, duration, time, notePos):
-        black = is_black_key(note)
-        if black:
-            self.width = 15
+    def __init__(self, window_width, window_height, note, duration, time, notePos):
+        self.black = is_black_key(note)
+        if self.black:
+            self.width = window_width / 96
+            self.color = BLACK
         else:
-            self.width = 25
+            self.width = window_width / 57.6
+            self.color = WHITE
         self.note = note
-        self.height = duration * 150
+        self.duration = duration
+        self.height = (window_height / (duration * 150))
         self.x = notePos[note-21]
         self.y = -self.height
         self.speed = 7
-
-        if black:
-            self.color = BLACK
-        else:
-            self.color = WHITE
+        self.old_height = window_height
 
 #updates the position depending on the speed variable, which is how many pixels down the object will move on the next frame
     def update(self):
@@ -45,6 +44,20 @@ class DisNote:
 #draws the object on whatever surface is passed through the window input parameter
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+
+    def windowUpdate(self, notePos, window_width, window_height):
+        self.x = notePos[self.note-21]
+        self.y = (self.old_height / self.y) * (window_height)
+
+        if self.black:
+            self.width = window_width / 96
+        else:
+            self.width = window_width / 57.6
+
+        self.height = (window_height / (self.duration * 150))
+
+
+
 
 
 
@@ -76,17 +89,17 @@ class TempNote:
 #the note's position is off of the screen, where they are then removed. 
 class LiveNote:
 
-    def __init__(self, note, notePos, window_height):
+    def __init__(self, note, notePos,window_width, window_height):
         black = is_black_key(note)
         if black:
-            self.width = 15
+            self.width = window_width / 96
         else:
-            self.width = 25
+            self.width = window_width / 57.6
         self.note = note
         self.released = False
         self.height = 0
         self.x = notePos[note-21]
-        self.y = window_height - 200
+        self.y = window_height - (window_height / 4.5)
         self.speed = 7
 
         if black:

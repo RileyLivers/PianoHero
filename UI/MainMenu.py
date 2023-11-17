@@ -46,7 +46,7 @@ def MainMenu(window, window_width, window_height):
             chill = False
 
         elif LearnPiano.draw(window):
-            current_screen = 'TempMenu'
+            current_screen = 'LearnPianoMenu'
             chill = False
 
         elif Exit.draw(window):
