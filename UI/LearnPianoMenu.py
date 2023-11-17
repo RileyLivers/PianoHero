@@ -22,8 +22,8 @@ def LearnPianoMenu(window, window_width, window_height):
     #Creating the different Main Menu Buttons:
     Chords = Button((window_width / 40), (window_height / 3), (window_width / 5), (window_height / 16), 'Chords', WHITE, GRAY, font, 36, BLACK)
     Scales = Button((window_width / 40)*11, (window_height / 3), (window_width / 5), (window_height / 16), 'Scales', WHITE, GRAY, font, 36, BLACK)
-    Something = Button((window_width / 40)*21, (window_height / 3), (window_width / 5), (window_height / 16), 'Something', WHITE, GRAY, font, 36, BLACK)
-    AnotherSomething = Button(window_width - (window_width / 5 ) - (window_width / 40), (window_height / 3), (window_width / 5), (window_height / 16), 'Something Else', WHITE, GRAY, font, 36, BLACK)
+    Something = Button((window_width / 40)*21, (window_height / 3), (window_width / 5), (window_height / 16), 'Temp', WHITE, GRAY, font, 36, BLACK)
+    AnotherSomething = Button(window_width - (window_width / 5 ) - (window_width / 40), (window_height / 3), (window_width / 5), (window_height / 16), 'Temp', WHITE, GRAY, font, 36, BLACK)
     Return = Button((window_width / 40), (window_height / 20) * 18, (window_width / 10), (window_height / 25), 'Return', WHITE, GRAY, font, 36, BLACK)
 
 
